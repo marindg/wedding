@@ -4,11 +4,10 @@ import { IAddress } from "typings/commun";
 export interface IUser {
   _id: ObjectId;
   login: string;
-  password?: string;
-  passwordRequired: boolean;
   loginLogs: ILoginLogs[];
   isAdmin: boolean;
   guest: IGuest[];
+  activate: boolean;
 }
 
 export interface ILoginLogs {
