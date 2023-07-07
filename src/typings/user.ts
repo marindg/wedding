@@ -14,7 +14,7 @@ export interface IUser {
 export interface ILoginLogs {
   date: Date;
   country: string;
-  IP: string;
+  ip: string;
   device: string;
   browser: string;
 }
