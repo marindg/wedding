@@ -1,4 +1,4 @@
-import { sendResponse } from "./responseHandler";
-import { errorHandler } from "./errorHandler";
+import { sendResponse } from "utils/responseHandler";
+import { errorHandler } from "utils/errorHandler";
 
 export { sendResponse, errorHandler };

@@ -1,5 +1,5 @@
 import { ObjectId } from "mongoose";
-import { IAddress, IContact } from "./commun";
+import { IAddress, IContact } from "typings/commun";
 
 export interface IWedding {
   _id: ObjectId;

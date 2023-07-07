@@ -1,5 +1,5 @@
 import { ObjectId } from "mongoose";
-import { IAddress } from "./commun";
+import { IAddress } from "typings/commun";
 
 export interface IUser {
   _id: ObjectId;

@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import authRouter from "@routes/auth/authRouter";
-import { sendResponse } from "@utils/responseHandler";
-import { limiter } from "@middleware/rateLimite";
+import { sendResponse } from "utils";
+import { limiter } from "middleware/limiter";
 
 const router = Router();
 
