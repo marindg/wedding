@@ -1,7 +1,8 @@
+import { ObjectId } from "mongoose";
 import { IAddress, IContact } from "./commun";
 
 export interface IWedding {
-  _id: string;
+  _id: ObjectId;
   name: string;
   mainDate: string;
   mainPicture: string;
@@ -17,7 +18,7 @@ export interface IWedding {
 }
 
 export interface IEvents {
-  _id: string;
+  _id: ObjectId;
   name: string;
   startDate: Date;
   endDate: Date;
@@ -33,7 +34,7 @@ export interface IEventAddress extends IAddress {
 }
 
 export interface ISchedule {
-  _id: string;
+  _id: ObjectId;
   startDate: string;
   endDate: string;
   name: string;
@@ -43,7 +44,7 @@ export interface ISchedule {
 }
 
 export interface ITable {
-  _id: string;
+  _id: ObjectId;
   emplacement: string;
   name: string;
   comment?: string;
@@ -51,7 +52,7 @@ export interface ITable {
 }
 
 export interface IMenu {
-  _id: string;
+  _id: ObjectId;
   diet: string;
   name: string;
   category: string;
@@ -59,7 +60,7 @@ export interface IMenu {
 }
 
 export interface IDrink {
-  _id: string;
+  _id: ObjectId;
   alcool: boolean;
   name: string;
   order: number;
