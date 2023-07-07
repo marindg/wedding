@@ -23,11 +23,15 @@ export const getAccessLogin = errorHandler(async (req: Request, res: Response) =
     }
     return sendResponse(res, 401, "error", "wrong login");
   } else {
-    const token = jwt.sign({ user }, process.env.JWT_SECRET!, {
-      expiresIn: process.env.JWT_EXPIRES_IN,
-    });
+    if (!user.activate) {
+      return sendResponse(res, 403, "error", "User is desactivated");
+    } else {
+      const token = jwt.sign({ user }, process.env.JWT_SECRET!, {
+        expiresIn: process.env.JWT_EXPIRES_IN,
+      });
 
-    return sendResponse(res, 200, "success", token);
+      return sendResponse(res, 200, "success", token);
+    }
   }
 });
 
@@ -58,5 +62,28 @@ export const createLogin = errorHandler(async (req: Request, res: Response) => {
     });
 
     return sendResponse(res, 201, "success", token);
+  }
+});
+
+export const getUserActivated = errorHandler(async (req: Request, res: Response) => {
+  const { login } = req.body;
+  const user: IUser | undefined | null = await userModel.findOne({ login: login.toUpperCase() });
+  if (!user) {
+    return sendResponse(res, 404, "error", "user not founded");
+  } else {
+    await userModel.updateOne({ login: user.login }, { activate: true });
+    return sendResponse(res, 200, "success", `${user.login} is now activated`);
+  }
+});
+
+export const getUserDesactivated = errorHandler(async (req: Request, res: Response) => {
+  const { login } = req.body;
+
+  const user: IUser | undefined | null = await userModel.findOne({ login: login.toUpperCase() });
+  if (!user) {
+    return sendResponse(res, 404, "error", "user not founded");
+  } else {
+    await userModel.updateOne({ login: user.login }, { activate: false });
+    return sendResponse(res, 200, "success", `${user.login} is now desactivated`);
   }
 });
