@@ -1,12 +1,24 @@
 import express, { Router } from "express";
-import * as authController from "@controller/auth/login";
-import { adminOnly } from "middleware/adminOnly";
+import * as authController from "@controller/auth/loginController";
+// import * as guestController from "controller/auth/guest";
+import { authMiddleware } from "@middleware/authMiddleware";
+// import { userOnly } from "@middleware/userOnly";
 
 const authRouter: Router = express.Router();
 
+// Manage User
 authRouter.get("/", authController.getAccessLogin);
 authRouter.post("/", authController.createLogin);
-authRouter.patch("/activate", adminOnly, authController.getUserActivated);
-authRouter.patch("/desactivate", adminOnly, authController.getUserDesactivated);
+authRouter.patch("/activate", authMiddleware(true), authController.getUserActivated);
+authRouter.patch("/desactivate", authMiddleware(true), authController.getUserDesactivated);
+
+// Manage Guest
+// authRouter.get("/guest", userOnly, guestController.createGuest);
+// authRouter.post("/guest", userOnly, guestController.createGuest);
+// authRouter.patch("/guest/:index", userOnly, guestController.createGuest);
+// authRouter.patch("/guest/:index/present", userOnly, guestController.createGuest);
+// authRouter.patch("/guest/:index/absent", userOnly, guestController.createGuest);
+// authRouter.patch("/guest/:index/diet", userOnly, guestController.createGuest);
+// authRouter.patch("/guest/:index/comment", userOnly, guestController.createGuest);
 
 export default authRouter;

@@ -10,7 +10,7 @@ export const guestSchema = new Schema<IGuest>({
   address: addressSchema,
   diet: { type: String, required: true },
   present: { type: Boolean, required: true, default: true },
-  comment: { type: String, required: true },
+  comment: { type: String, required: false },
   birthDate: { type: Date, required: true },
 });
 

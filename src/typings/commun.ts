@@ -13,3 +13,9 @@ export interface IContact {
   mail: string | null;
   comment?: string;
 }
+
+export interface IService {
+  code: number;
+  status: string;
+  message: string;
+}
