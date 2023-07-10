@@ -2,12 +2,18 @@ import { IGuest } from "typings/user";
 import guestModel from "models/guestModel";
 import userModel from "models/userModel";
 import { IService } from "typings/commun";
+import { guestSchema } from "utils/userValidator";
 
 export async function createGuest(guest: IGuest, id: string): Promise<IService> {
   try {
-    if (!guest.firstName || !guest.lastName || !guest.mail || !guest.phone || !guest.birthDate) {
-      return { code: 400, status: "error", message: "guest data missing" };
+    const { error } = guestSchema.validate(guest);
+    if (error) {
+      return { code: 400, status: "error", message: error.details[0].message };
     }
+
+    // if (!guest.firstName || !guest.lastName || !guest.mail || !guest.phone || !guest.birthDate) {
+    //   return { code: 400, status: "error", message: "guest data missing" };
+    // }
     const guestInDb = await guestModel.findOne({ mail: guest.mail });
 
     if (guestInDb) {
