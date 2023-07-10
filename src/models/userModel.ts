@@ -1,7 +1,5 @@
 import { Schema, model } from "mongoose";
 import { IUser } from "typings/user";
-// import { loginLogsSchema } from "models/loginLogsModel";
-// import { guestSchema } from "models/guestModel";
 
 const userSchema = new Schema<IUser>({
   login: { type: String, required: true, uppercase: true },

@@ -11,8 +11,13 @@ authRouter.post("/", authController.createLogin);
 authRouter.patch("/activate", authMiddleware(true), authController.getUserActivated);
 authRouter.patch("/desactivate", authMiddleware(true), authController.getUserDesactivated);
 
+// Manage User
+authRouter.get("/users/:activated", authMiddleware(true), guestController.getUser);
+authRouter.get("/user/:login", authMiddleware(true), guestController.getUserByLogin);
+authRouter.get("/user", authMiddleware(false), guestController.getUser);
+
 // Manage Guest
-// authRouter.get("/guest", userOnly, guestController.createGuest);
+authRouter.get("/guests/:activated", authMiddleware(true), guestController.getAllGuest);
 authRouter.post("/guest", authMiddleware(false), guestController.createGuest);
 // authRouter.patch("/guest/:index", userOnly, guestController.createGuest);
 // authRouter.patch("/guest/:index/present", userOnly, guestController.createGuest);
