@@ -1,8 +1,7 @@
 import express, { Router } from "express";
 import * as authController from "@controller/auth/loginController";
-// import * as guestController from "controller/auth/guest";
+import * as guestController from "controller/auth/guestController";
 import { authMiddleware } from "@middleware/authMiddleware";
-// import { userOnly } from "@middleware/userOnly";
 
 const authRouter: Router = express.Router();
 
@@ -14,7 +13,7 @@ authRouter.patch("/desactivate", authMiddleware(true), authController.getUserDes
 
 // Manage Guest
 // authRouter.get("/guest", userOnly, guestController.createGuest);
-// authRouter.post("/guest", userOnly, guestController.createGuest);
+authRouter.post("/guest", authMiddleware(false), guestController.createGuest);
 // authRouter.patch("/guest/:index", userOnly, guestController.createGuest);
 // authRouter.patch("/guest/:index/present", userOnly, guestController.createGuest);
 // authRouter.patch("/guest/:index/absent", userOnly, guestController.createGuest);

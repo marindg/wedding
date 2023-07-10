@@ -1,7 +1,16 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import User from "models/userModel";
+import { IUser } from "typings/user";
 import { sendResponse } from "utils";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: IUser;
+    }
+  }
+}
 
 export const authMiddleware = (roleCheck: boolean) => {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -34,6 +43,7 @@ export const authMiddleware = (roleCheck: boolean) => {
         return sendResponse(res, 403, "error", "Unauthorized");
       }
 
+      req.user = user;
       return next();
     } catch (error: any) {
       return sendResponse(res, 500, "error", error.message!);

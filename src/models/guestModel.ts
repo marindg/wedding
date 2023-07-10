@@ -8,7 +8,7 @@ export const guestSchema = new Schema<IGuest>({
   mail: { type: String, required: true },
   phone: { type: String, required: true },
   address: addressSchema,
-  diet: { type: String, required: true },
+  diet: { type: String, required: true, default: "any" },
   present: { type: Boolean, required: true, default: true },
   comment: { type: String, required: false },
   birthDate: { type: Date, required: true },

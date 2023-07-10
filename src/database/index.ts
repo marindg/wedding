@@ -7,9 +7,6 @@ const connectionToDatabase = async (): Promise<void> => {
   try {
     const URI_DB: string = `mongodb+srv://${process.env.DB_USER_LOGIN}:${process.env.DB_USER_PASSWORD}@${process.env.DB_CLUSTER}.${process.env.DB_DATABASE}.mongodb.net/`;
 
-    // console.log(URI_DB);
-    // console.log("mongodb+srv://admin:lapin@wedding.k9m6srj.mongodb.net/");
-
     const options = {
       useNewUrlParser: true,
       useUnifiedTopology: true,

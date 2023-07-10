@@ -17,5 +17,5 @@ export interface IContact {
 export interface IService {
   code: number;
   status: string;
-  message: string;
+  message: string | object;
 }

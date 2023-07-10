@@ -8,6 +8,7 @@ export interface IUser {
   isAdmin: boolean;
   guest: IGuest[];
   activate: boolean;
+  creationDate: Date;
 }
 
 export interface ILoginLogs {
