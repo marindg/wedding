@@ -1,120 +1,383 @@
-swagger: '2.0'
-info:
-  version: '1.0'
-  title: "wedding"
-  description: Wedding is a simple API allowing consumers to access to informations about the wedding.
-  license:
-    name: MIT
-    url: https://github.com/marindg/wedding.git
-host: polls.apiblueprint.org
-basePath: /
-schemes:
-- https
-consumes:
-- application/json
-produces:
-- application/json
-paths:
-  /questions:
-    x-summary: Questions Collection
-    get:
-      summary: List All Questions
-      responses:
-        200:
-          description: Successful Response
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Question'
-          examples:
-            application/json:
-              - question: Favourite programming language?
-                published_at: '2015-08-05T08:40:51.620Z'
-                choices:
-                  - choice: Swift
-                    votes: 2048
-                  - choice: Python
-                    votes: 1024
-                  - choice: Objective-C
-                    votes: 512
-                  - choice: Ruby
-                    votes: 256
-    post:
-      description: >-
-        You may create your own question using this action. It takes a JSON
-        object containing a question and a collection of answers in the
-        form of choices.
-      summary: Create a New Question
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/QuestionRequest'
-      responses:
-        201:
-          description: ''
-          schema:
-            $ref: '#/definitions/Question'
-          examples:
-            application/json:
-                question: Favourite programming language?
-                published_at: '2015-08-05T08:40:51.620Z'
-                choices:
-                  - choice: Swift
-                    votes: 0
-                  - choice: Python
-                    votes: 0
-                  - choice: Objective-C
-                    votes: 0
-                  - choice: Ruby
-                    votes: 0
-definitions:
-  Question:
-    title: Question
-    type: object
-    properties:
-      question:
-        type: string
-      published_at:
-        type: string
-      choices:
-        type: array
-        items:
-          $ref: '#/definitions/Choice'
-    required:
-      - question
-      - published_at
-      - choices
-  Choice:
-    title: Choice
-    type: object
-    properties:
-      votes:
-        type: integer
-        format: int32
-      choice:
-        type: string
-    required:
-      - votes
-      - choice
-  QuestionRequest:
-    title: Question Request
-    type: object
-    properties:
-      question:
-        type: string
-      choices:
-        type: array
-        items:
-          type: string
-    required:
-      - question
-      - choices
-    example:
-      question: Favourite programming language?
-      choices:
-        - Swift
-        - Python
-        - Objective-C
-        - Ruby
+FORMAT: 1A
+
+# Projet Wedding API
+
+## Groupe Authentification
+
+### Connexion [/auth]
+
+Création et accès à une connexion utilisateur.
+
++ POST
+
+    Cette requête redirige l'utilisateur vers une création de compte, connexion ou pas.
+
+    + Request (application/json)
+        
+        + Body
+            
+                {
+                    "login": "nom_utilisateur" || "password_creation",
+                }
+
+    + Response 200 (application/json) si création
+
+            {
+                "status": "success",
+                "message": "create new user."
+            }
+            
+    + Response 200 (application/json)
+
+            {
+                "status": "success",
+                "message": token_string
+            }
+
+    + Response 400 (application/json)
+
+            {
+                "status": "error",
+                "message": "login missing"
+            }
+            
+    + Response 401 (application/json)
+
+            {
+                "status": "error",
+                "message": "wrong login"
+            }
+            
+    + Response 403 (application/json)
+
+            {
+                "status": "error",
+                "message": "User is desactivated"
+            }
+    + Response 500 (application/json)
+
+            {
+                "status": "error",
+                "message": "An unexpected error occurred."
+            }
+
+    + Response 500 (application/json)
+
+            {
+                "status": "error",
+                "message": error.message
+            }
+
+
++ POST
+
+    Cette requête créée un compte à l'utilisateur.
+
+    + Request (application/json)
+        
+        + Body
+            
+                {
+                    "login": "nom_utilisateur",
+                    "password": "password_creation"
+                }
+
+    + Response 200 (application/json) si création
+
+            {
+                "status": "success",
+                "message": token_string
+            }
+            
+    + Response 400 (application/json)
+
+            {
+                "status": "error",
+                "message": "login missing"
+            }
+            
+    + Response 400 (application/json)
+
+            {
+                "status": "error",
+                "message": "password missing"
+            }  
+            
+    + Response 403 (application/json)
+
+            {
+                "status": "error",
+                "message": "wrong password"
+            }
+            
+    + Response 409 (application/json)
+
+            {
+                "status": "error",
+                "message": "login ${newLogin} already taken"
+            }
+            
+    + Response 500 (application/json)
+
+            {
+                "status": "error",
+                "message": "An unexpected error occurred."
+            }
+
+    + Response 500 (application/json)
+
+            {
+                "status": "error",
+                "message": error.message
+            }
+
+
+### Utilisateur [/auth/user]
+
+Gestion des informations utilisateur.
+
++ GET
+
+    Cette requête renvoie les informations de l'utilisateur connecté.
+
+    + Headers
+
+            Authorization: Bearer token_string
+
+    + Response 200 (application/json)
+
+            {
+                
+                "status": "error",
+                "message": 
+            }
+
+    + Response 401 (application/json)
+
+            {
+                "error": "Token invalide."
+            }
+
++ PATCH
+
+    Cette requête met à jour les informations de l'utilisateur connecté.
+
+    + Headers
+
+            Authorization: Bearer token_string
+
+    + Request (application/json)
+        
+        + Body
+            
+                {
+                    "username": "NEW_USERNAME",
+                    "email": "NEW_EMAIL"
+                }
+
+    + Response 200 (application/json)
+
+            {
+                "message": "Utilisateur mis à jour avec succès."
+            }
+
+    + Response 400 (application/json)
+
+            {
+                "error": "Paramètres manquants ou invalides."
+            }
+
+    + Response 401 (application/json)
+
+            {
+                "error": "Token invalide."
+            }
+
+## Groupe Invité
+
+### Invité [../auth/guest]
+
+Gestion des invités liés à un utilisateur.
+
++ POST
+
+    Cette requête crée un invité sur le compte de l'utilisateur connecté.
+
+    + Headers
+
+            Authorization: Bearer token_string
+
+    + Request (application/json)
+        
+        + Body
+            
+                {
+                    "guestName": "GUEST_NAME",
+                    "guestEmail": "GUEST_EMAIL"
+                }
+
+    + Response 200 (application/json)
+
+            {
+                "message": "Invité créé avec succès."
+            }
+
+    + Response 400 (application/json)
+
+            {
+                "error": "Paramètres manquants ou invalides."
+            }
+
+    + Response 401 (application/json)
+
+            {
+                "error": "Token invalide."
+            }
+
++ GET
+
+    Cette requête renvoie les informations des invités sur le compte de l'utilisateur connecté.
+
+    + Headers
+
+            Authorization: Bearer token_string
+
+    + Response 200 (application/json)
+
+            {
+                "guestList": [
+                    {
+                        "guestName": "GUEST_NAME",
+                        "guestEmail": "GUEST_EMAIL"
+                    }
+                ]
+            }
+
+    + Response 401 (application/json)
+
+            {
+                "error": "Token invalide."
+            }
+
++ PATCH
+
+    Cette requête met à jour les informations d'un invité sur le compte de l'utilisateur connecté.
+
+    + Headers
+
+            Authorization: Bearer token_string
+
+    + Request (application/json)
+        
+        + Body
+            
+                {
+                    "oldGuestName": "OLD_GUEST_NAME",
+                    "newGuestName": "NEW_GUEST_NAME",
+                    "newGuestEmail": "NEW_GUEST_EMAIL"
+                }
+
+    + Response 200 (application/json)
+
+            {
+                "message": "Invité mis à jour avec succès."
+            }
+
+    + Response 400 (application/json)
+
+            {
+                "error": "Paramètres manquants ou invalides."
+            }
+
+    + Response 401 (application/json)
+
+            {
+                "error": "Token invalide."
+            }
+
+## Groupe Administration
+
+### Utilisateurs [../admin/user]
+
+Récupération des informations de tous les utilisateurs.
+
++ GET
+
+    + Response 200 (application/json)
+
+            {
+                "users": [
+                    {
+                        "username": "USERNAME",
+                        "email": "EMAIL",
+                        "created_at": "CREATION_DATE"
+                    }
+                ]
+            }
+
+### Utilisateur [../admin/{login}]
+
+Récupération des informations d'un utilisateur spécifique.
+
++ GET
+
+    + Parameters
+        + login: LOGIN (required) - Nom d'utilisateur
+
+    + Response 200 (application/json)
+
+            {
+                "userData": {
+                    "username": "USERNAME",
+                    "email": "EMAIL",
+                    "created_at": "CREATION_DATE"
+                }
+            }
+
+    + Response 404 (application/json)
+
+            {
+                "error": "Utilisateur non trouvé."
+            }
+
+### Désactivation Utilisateur [../admin/desactivate/{login}]
+
+Désactivation d'un compte utilisateur.
+
++ GET
+
+    + Parameters
+        + login: LOGIN (required) - Nom d'utilisateur
+
+    + Response 200 (application/json)
+
+            {
+                "message": "Compte utilisateur désactivé avec succès."
+            }
+
+    + Response 404 (application/json)
+
+            {
+                "error": "Utilisateur non trouvé."
+            }
+
+### Activation Utilisateur [../admin/activate/{login}]
+
+Activation d'un compte utilisateur.
+
++ GET
+
+    + Parameters
+        + login: LOGIN (required) - Nom d'utilisateur
+
+    + Response 200 (application/json)
+
+            {
+                "message": "Compte utilisateur activé avec succès."
+            }
+
+    + Response 404 (application/json)
+
+            {
+                "error": "Utilisateur non trouvé."
+            }
