@@ -5,7 +5,7 @@ import { sendResponse } from "utils";
 import { limiter } from "middleware/limiter";
 import { authMiddleware } from "@middleware/authMiddleware";
 
-const router = Router();
+const router: Router = Router();
 
 router.use("/auth", limiter, authRouter);
 router.use("/admin", authMiddleware(true), limiter, adminRouter);

@@ -1,45 +1,35 @@
 import { Request, Response } from "express";
 import { sendResponse } from "utils";
-import dotenv from "dotenv";
-import { IGuest } from "typings/user";
 import { IService } from "typings/commun";
 import * as guestService from "service/auth/guestService";
+import { createGuestByLoginDTO, readGuestByLoginDTO, patchGuestByIdDTO } from "typings/dto";
+import { IGuest } from "typings/user";
 
-dotenv.config();
-
-export const createGuest = async (req: Request, res: Response) => {
-  const newGuest: IGuest = req.body;
-  if (!req.user) {
-    return sendResponse(res, 401, "error", "No token provided");
+export const createGuestByLogin = async (req: Request<{}, {}, createGuestByLoginDTO>, res: Response) => {
+  let login: string;
+  if (req.user!.isAdmin) {
+    login = req.body.login.toUpperCase();
+  } else {
+    login = req.user!.login.toString().toUpperCase();
   }
-  const id: string = req.user._id.toString();
-  const result: IService = await guestService.createGuest(newGuest, id);
+  const guest: IGuest = req.body.guest;
+  const result: IService = await guestService.createGuestByLogin({ login, guest });
   return sendResponse(res, result.code, result.status, result.message);
 };
 
-export const getAllGuest = async (req: Request, res: Response) => {
-  const activated: boolean = req.params.activated.toLowerCase() === "true";
-  const result: IService = await guestService.getAllGuest(activated);
-  return sendResponse(res, result.code, result.status, result.message);
-};
-
-export const getUser = async (req: Request, res: Response) => {
-  if (!req.user) {
-    return sendResponse(res, 401, "error", "No token provided");
+export const readGuestByLogin = async (req: Request<{}, {}, readGuestByLoginDTO>, res: Response) => {
+  let login: string;
+  if (req.user!.isAdmin) {
+    login = req.body.login.toUpperCase();
+  } else {
+    login = req.user!.login.toString().toUpperCase();
   }
-  const login: string = req.user.login;
-  const result: IService = await guestService.getUser(login);
+  const result: IService = await guestService.readGuestByLogin({ login });
   return sendResponse(res, result.code, result.status, result.message);
 };
 
-export const getUserByLogin = async (req: Request, res: Response) => {
-  const login: string = req.params.login;
-  const result: IService = await guestService.getUser(login);
-  return sendResponse(res, result.code, result.status, result.message);
-};
-
-export const getAllUser = async (req: Request, res: Response) => {
-  const activated: boolean = req.params.activated.toLowerCase() === "true";
-  const result: IService = await guestService.getAllGuest(activated);
+export const patchGuestById = async (req: Request<{}, {}, patchGuestByIdDTO>, res: Response) => {
+  const { guestId, updates } = req.body;
+  const result: IService = await guestService.patchGuestById({ guestId, updates });
   return sendResponse(res, result.code, result.status, result.message);
 };

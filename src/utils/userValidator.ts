@@ -1,6 +1,7 @@
 import Joi, { ObjectSchema } from "joi";
 import { IUser, IGuest, ILoginLogs } from "typings/user";
 import { IAddress } from "typings/commun";
+import { createGuestByLoginDTO, patchGuestByIdDTO, readGuestByLoginDTO, readUserDTO } from "typings/dto";
 
 export const addressSchema: ObjectSchema<IAddress> = Joi.object({
   country: Joi.string().required(),
@@ -37,4 +38,30 @@ export const userSchema: ObjectSchema<IUser> = Joi.object({
   guest: guestSchema.optional(),
   activate: Joi.boolean().required(),
   creationDate: Joi.date().required(),
+});
+
+export const patchUserSchema: ObjectSchema<Partial<IUser>> = Joi.object({
+  login: Joi.string().uppercase(),
+  isAdmin: Joi.boolean(),
+  guest: Joi.array().items(Joi.string()),
+  activate: Joi.boolean(),
+  creationDate: Joi.date(),
+}).unknown(true);
+
+export const readUserSchema: ObjectSchema<readUserDTO> = Joi.object({
+  login: Joi.string().required(),
+});
+
+export const readGuestByLoginSchema: ObjectSchema<readGuestByLoginDTO> = Joi.object({
+  login: Joi.string().required(),
+});
+
+export const createGuestByLoginSchema: ObjectSchema<createGuestByLoginDTO> = Joi.object({
+  login: Joi.string().required(),
+  guest: guestSchema.required(),
+});
+
+export const patchGuestByIdSchema: ObjectSchema<patchGuestByIdDTO> = Joi.object({
+  id: Joi.string().required(),
+  guest: guestSchema.required(),
 });

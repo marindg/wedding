@@ -3,10 +3,34 @@ import guestModel from "models/guestModel";
 import userModel from "models/userModel";
 import { IService } from "typings/commun";
 import { userValidator } from "utils";
+import { createGuestByLoginDTO, patchGuestByIdDTO, readGuestByLoginDTO } from "typings/dto";
 
-export async function createGuest(guest: IGuest, id: string): Promise<IService> {
+export async function readGuestByLogin(login: readGuestByLoginDTO): Promise<IService> {
   try {
-    const { error } = userValidator.guestSchema.validate(guest);
+    const { error } = userValidator.readGuestByLoginSchema.validate(login);
+    if (error) {
+      return { code: 400, status: "error", message: error.details[0].message };
+    }
+
+    const user: IUser | undefined | null = await userModel.findOne({ login: login }).populate("guest");
+
+    if (!user) {
+      return { code: 404, status: "error", message: "User not found" };
+    }
+
+    return { code: 200, status: "success", message: user };
+  } catch (error: any) {
+    if (error instanceof Error) {
+      return { code: 500, status: "error", message: error.message };
+    } else {
+      return { code: 500, status: "error", message: "An unexpected error occurred." };
+    }
+  }
+}
+
+export async function createGuestByLogin({ login, guest }: createGuestByLoginDTO): Promise<IService> {
+  try {
+    const { error } = userValidator.createGuestByLoginSchema.validate({ login, guest });
     if (error) {
       return { code: 400, status: "error", message: error.details[0].message };
     }
@@ -29,7 +53,7 @@ export async function createGuest(guest: IGuest, id: string): Promise<IService> 
     });
 
     await newGuest.save();
-    await userModel.updateOne({ _id: id }, { $push: { guest: newGuest._id } });
+    await userModel.updateOne({ login: login }, { $push: { guest: newGuest._id } });
 
     return { code: 201, status: "success", message: `${newGuest.firstName} ${newGuest.lastName} well saved` };
   } catch (error: any) {
@@ -41,52 +65,19 @@ export async function createGuest(guest: IGuest, id: string): Promise<IService> 
   }
 }
 
-export async function getAllGuest(userActivate: boolean): Promise<IService> {
+export async function patchGuestById({ guestId, updates }: patchGuestByIdDTO): Promise<IService> {
   try {
-    const users = await userModel.find({ activate: userActivate }).populate("guest");
-
-    const guests: IGuest[] = [];
-    users.forEach((user: IUser) => {
-      guests.push(...user.guest);
-    });
-
-    return { code: 201, status: "success", message: guests };
-  } catch (error: any) {
-    if (error instanceof Error) {
-      return { code: 500, status: "error", message: error.message };
-    } else {
-      return { code: 500, status: "error", message: "An unexpected error occurred." };
-    }
-  }
-}
-
-export async function getUser(login: string): Promise<IService> {
-  try {
-    const user: IUser | undefined | null = await userModel.findOne({ login: login }).populate("guest");
-
-    if (!user) {
-      return { code: 404, status: "error", message: "User not found" };
+    const { error } = userValidator.patchGuestByIdSchema.validate({ guestId, updates });
+    if (error) {
+      return { code: 400, status: "error", message: error.details[0].message };
     }
 
-    return { code: 201, status: "success", message: user };
-  } catch (error: any) {
-    if (error instanceof Error) {
-      return { code: 500, status: "error", message: error.message };
-    } else {
-      return { code: 500, status: "error", message: "An unexpected error occurred." };
-    }
-  }
-}
-
-export async function getUsersActivated(activated: boolean, logins: string | undefined): Promise<IService> {
-  try {
-    const users: IUser[] | null = await userModel.find({ login: logins ? logins : "", activate: activated }).populate("guest");
-
-    if (!users) {
-      return { code: 404, status: "error", message: "User not found" };
+    const guest: IGuest | null = await guestModel.findOneAndUpdate({ _id: guestId }, updates, { new: true });
+    if (!guest) {
+      return { code: 404, status: "error", message: "Guest not found" };
     }
 
-    return { code: 201, status: "success", message: users };
+    return { code: 201, status: "success", message: guest };
   } catch (error: any) {
     if (error instanceof Error) {
       return { code: 500, status: "error", message: error.message };

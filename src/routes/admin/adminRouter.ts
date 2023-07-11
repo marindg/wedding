@@ -1,17 +1,10 @@
 import express, { Router } from "express";
-import * as authController from "@controller/auth/loginController";
-import * as guestController from "controller/auth/guestController";
+import guestRouter from "routes/auth/guestRouter";
+import userRouter from "routes/auth/userRouter";
 
-const authRouter: Router = express.Router();
+const adminRouter: Router = express.Router();
 
-// Manage User
-authRouter.patch("/user/activate", authController.getUserActivated);
-authRouter.patch("/user/desactivate", authController.getUserDesactivated);
-authRouter.get("/user/activate", guestController.getUser);
-authRouter.get("/user/desactivate", guestController.getUser);
-authRouter.get("/user/:login", guestController.getUserByLogin);
+adminRouter.use("/user", userRouter);
+adminRouter.use("/guest", guestRouter);
 
-// Manage Guest
-authRouter.get("/guest/:activated", guestController.getAllGuest);
-
-export default authRouter;
+export default adminRouter;
