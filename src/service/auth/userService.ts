@@ -1,49 +1,33 @@
-import { userValidator } from "@utils/index";
 import userModel from "models/userModel";
 import { IService } from "typings/commun";
 import { IUser } from "typings/user";
+import { patchUserDTO, readUserDTO } from "typings/dto";
+import { ErrorHandler } from "middleware";
+import { httpStatusCodes } from "constant";
 
-export async function readUser(login: string): Promise<IService> {
+export async function readUser({ login }: readUserDTO): Promise<IService> {
   try {
-    const { error } = userValidator.readUserSchema.validate({ login });
-    if (error) {
-      return { code: 400, status: "error", message: error.details[0].message };
-    }
-
     const user: IUser | undefined | null = await userModel.findOne({ login: login }).populate("guest");
 
     if (!user) {
-      return { code: 404, status: "error", message: "User not found" };
+      throw new ErrorHandler(httpStatusCodes.FORBIDDEN, "User not found");
     }
 
-    return { code: 201, status: "success", message: user };
-  } catch (error: any) {
-    if (error instanceof Error) {
-      return { code: 500, status: "error", message: error.message };
-    } else {
-      return { code: 500, status: "error", message: "An unexpected error occurred." };
-    }
+    return { code: httpStatusCodes.OK, status: "success", message: user };
+  } catch (error: unknown) {
+    throw error;
   }
 }
 
-export async function patchUser(login: string, updates: Partial<IUser>): Promise<IService> {
+export async function patchUser({ login, updates }: patchUserDTO): Promise<IService> {
   try {
-    const { error } = userValidator.patchUserSchema.validate(updates);
-    if (error) {
-      return { code: 400, status: "error", message: error.details[0].message };
-    }
-
-    const user: IUser | null = await userModel.findOneAndUpdate({ login: login }, updates, { new: true }).populate("guest");
+    const user: IUser | null | undefined = await userModel.findOneAndUpdate({ login: login }, updates, { new: true });
     if (!user) {
-      return { code: 404, status: "error", message: "User not found" };
+      throw new ErrorHandler(httpStatusCodes.FORBIDDEN, "User not found");
     }
 
-    return { code: 201, status: "success", message: user };
-  } catch (error: any) {
-    if (error instanceof Error) {
-      return { code: 500, status: "error", message: error.message };
-    } else {
-      return { code: 500, status: "error", message: "An unexpected error occurred." };
-    }
+    return { code: httpStatusCodes.CREATED, status: "success", message: user };
+  } catch (error: unknown) {
+    throw error;
   }
 }

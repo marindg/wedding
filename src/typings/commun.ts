@@ -19,3 +19,8 @@ export interface IService {
   status: string;
   message: string | object;
 }
+
+export interface ICustomError extends Error {
+  statusCode?: number;
+  message: string;
+}

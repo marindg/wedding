@@ -1,6 +1,6 @@
 import { sendResponse } from "utils/responseHandler";
-import * as userValidator from "utils/userValidator";
-import * as weddingValidator from "utils/weddingValidator";
-import * as communValidator from "utils/communValidator";
+import { getLogin } from "utils/getLogin";
+import { generateToken } from "utils/generateToken";
+import { handleControllerError } from "utils/handleControllerError";
 
-export { sendResponse, userValidator, weddingValidator, communValidator };
+export { sendResponse, getLogin, generateToken, handleControllerError };

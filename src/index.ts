@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import router from "routes";
 import connectionToDatabase from "database";
+import { errorHandler } from "middleware";
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ const options: cors.CorsOptions = {
 app.use(cors(options));
 app.use(express.json());
 app.use(router);
+app.use(errorHandler);
 
 connectionToDatabase();
 

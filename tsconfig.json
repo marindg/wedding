@@ -36,6 +36,7 @@
       "@middleware/*": ["middleware/*"],
       "@models/*": ["models/*"],
       "@routes/*": ["routes/*"],
+      "@schemas/*": ["schemas/*"],
       "@service/*": ["service/*"],
       "@types/*": ["types/*"],
       "@utils/*": ["utils/*"]
