@@ -5,7 +5,7 @@ import { httpStatusCodes } from "constant";
 
 export function validate(schema: Joi.ObjectSchema) {
   return (req: Request, res: Response, next: NextFunction) => {
-    const { error } = schema.validate(req.body);
+    const { error } = schema.validate(req.body, { context: req.user! }); // Pass the entire req object
     if (error) {
       sendResponse(res, httpStatusCodes.BAD_REQUEST, "error", error.details[0].message);
     } else {

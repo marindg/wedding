@@ -14,7 +14,7 @@ export async function readGuestByLogin({ login }: readGuestByLoginDTO): Promise<
       throw new ErrorHandler(httpStatusCodes.FORBIDDEN, "User not found");
     }
 
-    return { code: httpStatusCodes.OK, status: "success", message: user };
+    return { code: httpStatusCodes.OK, status: "success", message: user.guest };
   } catch (error: unknown) {
     throw error;
   }
@@ -57,6 +57,7 @@ export async function patchGuestById({ guestId, updates }: patchGuestByIdDTO): P
 
     return { code: httpStatusCodes.CREATED, status: "success", message: guest };
   } catch (error: unknown) {
+    console.error(error);
     throw error;
   }
 }

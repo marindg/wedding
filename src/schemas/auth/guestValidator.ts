@@ -1,4 +1,5 @@
 import Joi, { ObjectSchema } from "joi";
+import mongoose from "mongoose";
 import { IAddress } from "typings/commun";
 import { createGuestByLoginDTO, patchGuestByIdDTO, readGuestByLoginDTO } from "typings/dto";
 import { IGuest } from "typings/user";
@@ -24,14 +25,28 @@ export const IGuestSchema: ObjectSchema<IGuest> = Joi.object({
 });
 
 export const createGuestByLoginDTOSchema: ObjectSchema<createGuestByLoginDTO> = Joi.object({
+  login: Joi.string().when("$isAdmin", {
+    is: true,
+    then: Joi.required(),
+    otherwise: Joi.optional(),
+  }),
   guest: IGuestSchema.required(),
 });
 
 export const readGuestByLoginDTOSchema: ObjectSchema<readGuestByLoginDTO> = Joi.object({
-  login: Joi.string().optional(),
+  login: Joi.string().when("$isAdmin", {
+    is: true,
+    then: Joi.required(),
+    otherwise: Joi.optional(),
+  }),
 });
 
 export const patchGuestByIdDTOSchema: ObjectSchema<patchGuestByIdDTO> = Joi.object({
-  guestId: Joi.string().required(),
+  guestId: Joi.string().custom((value, helpers) => {
+    if (!mongoose.Types.ObjectId.isValid(value)) {
+      return helpers.error("guestId is not an MongoDb Id");
+    }
+    return value;
+  }, "MongoDB ObjectId validation"),
   updates: IGuestSchema.required(),
 });

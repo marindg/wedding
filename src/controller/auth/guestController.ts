@@ -4,6 +4,8 @@ import { IService } from "typings/commun";
 import * as guestService from "service/auth/guestService";
 import { createGuestByLoginDTO, readGuestByLoginDTO, patchGuestByIdDTO } from "typings/dto";
 import { IGuest } from "typings/user";
+import { ErrorHandler } from "middleware";
+import { httpStatusCodes } from "constant";
 
 export const createGuestByLogin = async (req: Request<{}, {}, createGuestByLoginDTO>, res: Response) => {
   try {
@@ -29,6 +31,13 @@ export const readGuestByLogin = async (req: Request<{}, {}, readGuestByLoginDTO>
 export const patchGuestById = async (req: Request<{}, {}, patchGuestByIdDTO>, res: Response) => {
   try {
     const { guestId, updates }: patchGuestByIdDTO = req.body;
+
+    const control = req.user!.guest.find((el) => el.toString() === guestId.toString());
+
+    if (!req.user!.isAdmin && !control) {
+      throw new ErrorHandler(httpStatusCodes.UNAUTHORIZED, `Your login is not authorized to fix other guest than yours.`);
+    }
+
     const result: IService = await guestService.patchGuestById({ guestId, updates });
     return sendResponse(res, result.code, result.status, result.message);
   } catch (error: unknown) {
