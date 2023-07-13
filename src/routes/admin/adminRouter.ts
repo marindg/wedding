@@ -1,11 +1,10 @@
 import express, { Router } from "express";
-// import guestRouter from "routes/auth/guestRouter";
-// import userRouter from "routes/auth/userRouter";
+import userRouterAdmin from "routes/admin/userRouterAdmin";
+import guestRouterAdmin from "routes/admin/guestRouterAdmin";
 
 const adminRouter: Router = express.Router();
 
-// remove routes cause no need. Go direct to auth/user or auth/guest
-// adminRouter.use("/user", userRouter);
-// adminRouter.use("/guest", guestRouter);
+adminRouter.use("/user", userRouterAdmin);
+adminRouter.use("/guest", guestRouterAdmin);
 
 export default adminRouter;

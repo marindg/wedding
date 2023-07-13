@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import connectionRouter from "@routes/auth/connectionRouter";
+import connectionRouter from "routes/auth/connectionRouter";
 import userRouter from "routes/auth/userRouter";
 import guestRouter from "routes/auth/guestRouter";
 import { authMiddleware } from "middleware/authMiddleware";
