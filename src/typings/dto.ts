@@ -32,3 +32,8 @@ export interface patchGuestByIdDTO {
   guestId: mongoose.ObjectId;
   updates: Partial<IGuest>;
 }
+
+export interface activateUserByLoginAdminDTO {
+  login: string;
+  state: boolean;
+}
