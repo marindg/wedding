@@ -8,7 +8,7 @@ export interface IWedding {
   mainPicture: string;
   descriptionSmall: string;
   descriptionBig: string;
-  events: IEvents[];
+  event: IEvent[];
   schedule: ISchedule[];
   tables: ITable[];
   menu: IMenu[];
@@ -17,7 +17,7 @@ export interface IWedding {
   pictures: string[];
 }
 
-export interface IEvents {
+export interface IEvent {
   _id: ObjectId;
   name: string;
   startDate: Date;
@@ -35,8 +35,8 @@ export interface IEventAddress extends IAddress {
 
 export interface ISchedule {
   _id: ObjectId;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
   name: string;
   desc: string;
   pictures?: string[];

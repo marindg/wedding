@@ -1,7 +1,7 @@
 import Joi, { ObjectSchema } from "joi";
 
 import { IContact } from "typings/commun";
-import { IWedding, IEvents, IEventAddress, ISchedule, ITable, IMenu, IDrink } from "typings/wedding";
+import { IWedding, IEvent, IEventAddress, ISchedule, ITable, IMenu, IDrink } from "typings/wedding";
 
 export const eventAddressSchema: ObjectSchema<IEventAddress> = Joi.object({
   country: Joi.string().required(),
@@ -21,7 +21,7 @@ export const contactSchema: ObjectSchema<IContact> = Joi.object({
   icons: Joi.string().optional(),
 });
 
-export const eventsSchema: ObjectSchema<IEvents> = Joi.object({
+export const eventsSchema: ObjectSchema<IEvent> = Joi.object({
   name: Joi.string().required(),
   startDate: Joi.date().required(),
   endDate: Joi.date().required(),
