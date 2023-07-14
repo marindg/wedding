@@ -16,8 +16,11 @@ export const accessLogin = async (req: Request, res: Response) => {
 
 export const createLogin = async (req: Request, res: Response) => {
   try {
-    const { login, password }: createLoginDTO = req.body;
-    const result: IService = await connectionService.createLogin({ login, password });
+    const { login }: createLoginDTO = req.body;
+    const result: IService = await connectionService.createLogin({
+      login,
+    });
+
     return sendResponse(res, result.code, result.status, result.message);
   } catch (error: unknown) {
     return handleControllerError(error, res);

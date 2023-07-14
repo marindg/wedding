@@ -31,3 +31,17 @@ export interface IGuest {
   comment: string;
   birthDate: Date;
 }
+
+export interface ICreateLogin {
+  createLogin: boolean;
+}
+
+export enum tokenType {
+  "user" = "user",
+  "loginCreate" = "loginCreate",
+}
+
+export interface IGenerateToken {
+  user: IUser | ICreateLogin;
+  type: tokenType;
+}

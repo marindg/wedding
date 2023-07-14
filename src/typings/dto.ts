@@ -3,7 +3,6 @@ import { IGuest, IUser } from "typings/user";
 
 export interface createLoginDTO {
   login: string;
-  password: string;
 }
 
 export interface accessLoginDTO {

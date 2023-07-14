@@ -7,5 +7,4 @@ export const accessLoginSchema: ObjectSchema<accessLoginDTO> = Joi.object({
 
 export const createLoginSchema: ObjectSchema<createLoginDTO> = Joi.object({
   login: Joi.string().required(),
-  password: Joi.string().required(),
 });
