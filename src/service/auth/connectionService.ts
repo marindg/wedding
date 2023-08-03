@@ -9,9 +9,7 @@ import { tokenType } from "typings/user";
 
 const flyerPassword: string = process.env.FLYER_PASSWORD!.toUpperCase();
 
-export async function accessLogin({
-  login,
-}: accessLoginDTO): Promise<IService> {
+export async function accessLogin({ login }: accessLoginDTO): Promise<IService> {
   try {
     login = login.toUpperCase();
     const user: IUser | undefined | null = await userModel.findOne({ login });
@@ -45,7 +43,7 @@ export async function accessLogin({
         return {
           code: httpStatusCodes.OK,
           status: "success",
-          message: generateToken({ user: user, type: tokenType.user }),
+          message: { token: generateToken({ user: user, type: tokenType.user }), isAdmin: user.isAdmin, login: user.login },
         };
       }
     }
@@ -54,9 +52,7 @@ export async function accessLogin({
   }
 }
 
-export async function createLogin({
-  login,
-}: createLoginDTO): Promise<IService> {
+export async function createLogin({ login }: createLoginDTO): Promise<IService> {
   try {
     login = login.toUpperCase();
 
@@ -65,10 +61,7 @@ export async function createLogin({
     });
 
     if (user) {
-      throw new ErrorHandler(
-        httpStatusCodes.CONFLICT,
-        `Login ${login} already taken`
-      );
+      throw new ErrorHandler(httpStatusCodes.CONFLICT, `Login ${login} already taken`);
     }
 
     const newUser = new userModel({
@@ -78,7 +71,7 @@ export async function createLogin({
     return {
       code: httpStatusCodes.CREATED,
       status: "success",
-      message: generateToken({ user: savedUser, type: tokenType.user }),
+      message: { token: generateToken({ user: savedUser, type: tokenType.user }), isAdmin: false, login: savedUser.login },
     };
   } catch (error: unknown) {
     throw error;
