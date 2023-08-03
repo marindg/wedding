@@ -17,8 +17,6 @@ export const createAuthMiddleware = () => {
 
       let createLogin: boolean = false;
 
-      console.log("decoded:", decoded);
-
       if (typeof decoded !== "string" && decoded.createLogin) {
         createLogin = decoded.createLogin;
       } else {
