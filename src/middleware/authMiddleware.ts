@@ -1,5 +1,5 @@
+import { verifyToken } from "@utils/verifyToken";
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
 import User from "models/userModel";
 import { IUser } from "typings/user";
 import { sendResponse } from "utils";
@@ -23,7 +23,7 @@ export const authMiddleware = (roleCheck: boolean) => {
 
       const token = authHeader.split(" ")[1];
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+      const decoded = verifyToken(token, process.env.JWT_SECRET!);
 
       let login = "";
 

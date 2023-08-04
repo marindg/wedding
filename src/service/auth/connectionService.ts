@@ -3,9 +3,10 @@ import { httpStatusCodes } from "constant";
 import { IUser } from "typings/user";
 import { IService } from "typings/commun";
 import { generateToken } from "utils";
-import { createLoginDTO, accessLoginDTO } from "typings/dto";
+import { createLoginDTO, accessLoginDTO, resetTokenDTO } from "typings/dto";
 import { ErrorHandler } from "middleware";
 import { tokenType } from "typings/user";
+import { verifyToken } from "@utils/verifyToken";
 
 const flyerPassword: string = process.env.FLYER_PASSWORD!.toUpperCase();
 
@@ -74,6 +75,41 @@ export async function createLogin({ login }: createLoginDTO): Promise<IService> 
       message: { token: generateToken({ user: savedUser, type: tokenType.user }), isAdmin: false, login: savedUser.login },
     };
   } catch (error: unknown) {
+    throw error;
+  }
+}
+
+export async function resetToken({ token }: resetTokenDTO): Promise<IService> {
+  console.log("token from service:", token);
+  try {
+    const decoded = verifyToken(token, process.env.JWT_SECRET!);
+
+    let login = "";
+
+    if (typeof decoded !== "string" && decoded.user) {
+      login = decoded.user.login;
+    } else {
+      throw new ErrorHandler(httpStatusCodes.BAD_REQUEST, `Wrong token`);
+    }
+
+    const user: IUser | null | undefined = await userModel.findOne({
+      login: login,
+    });
+
+    if (!user) {
+      throw new ErrorHandler(httpStatusCodes.BAD_REQUEST, `User not found`);
+    }
+
+    if (!user.activate) {
+      throw new ErrorHandler(httpStatusCodes.FORBIDDEN, `Unauthorized`);
+    }
+
+    return {
+      code: httpStatusCodes.OK,
+      status: "success",
+      message: { token: generateToken({ user: user, type: tokenType.user }), isAdmin: user.isAdmin, login: user.login },
+    };
+  } catch (error: any) {
     throw error;
   }
 }

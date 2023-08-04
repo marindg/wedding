@@ -11,6 +11,10 @@ export interface accessLoginDTO {
   login: string;
 }
 
+export interface resetTokenDTO {
+  token: string;
+}
+
 export interface readUserDTO {
   login: string;
 }

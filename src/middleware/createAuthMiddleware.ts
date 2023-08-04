@@ -1,5 +1,5 @@
+import { verifyToken } from "@utils/verifyToken";
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
 import { sendResponse } from "utils";
 
 export const createAuthMiddleware = () => {
@@ -13,7 +13,7 @@ export const createAuthMiddleware = () => {
 
       const token = authHeader.split(" ")[1];
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET_CREATE_LOGIN!);
+      const decoded = verifyToken(token, process.env.JWT_SECRET_CREATE_LOGIN!);
 
       let createLogin: boolean = false;
 
