@@ -57,7 +57,6 @@ export async function patchGuestById({ guestId, updates }: patchGuestByIdDTO): P
 
     return { code: httpStatusCodes.CREATED, status: "success", message: guest };
   } catch (error: unknown) {
-    console.error(error);
     throw error;
   }
 }

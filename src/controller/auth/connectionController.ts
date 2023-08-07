@@ -6,13 +6,11 @@ import { createLoginDTO, accessLoginDTO, resetTokenDTO } from "typings/dto";
 
 export const accessLogin = async (req: Request, res: Response) => {
   try {
-    if (typeof req.query.login === "string") {
-      const login: accessLoginDTO = { login: req.query.login };
-      const result: IService = await connectionService.accessLogin(login);
-      return sendResponse(res, result.code, result.status, result.message);
-    } else {
-      return handleControllerError(new Error("params login is missing"), res);
-    }
+    const { login }: accessLoginDTO = req.body;
+    const result: IService = await connectionService.accessLogin({
+      login,
+    });
+    return sendResponse(res, result.code, result.status, result.message);
   } catch (error: unknown) {
     return handleControllerError(error, res);
   }
@@ -33,15 +31,12 @@ export const createLogin = async (req: Request, res: Response) => {
 
 export const resetToken = async (req: Request, res: Response) => {
   try {
-    if (typeof req.params.token === "string") {
-      const token: resetTokenDTO = { token: req.params.token };
-      console.log("token from controller:", token);
+    const { token }: resetTokenDTO = req.body;
+    const result: IService = await connectionService.resetToken({
+      token,
+    });
 
-      const result: IService = await connectionService.resetToken(token);
-      return sendResponse(res, result.code, result.status, result.message);
-    } else {
-      return handleControllerError(new Error("params token is missing"), res);
-    }
+    return sendResponse(res, result.code, result.status, result.message);
   } catch (error: unknown) {
     return handleControllerError(error, res);
   }

@@ -80,7 +80,6 @@ export async function createLogin({ login }: createLoginDTO): Promise<IService> 
 }
 
 export async function resetToken({ token }: resetTokenDTO): Promise<IService> {
-  console.log("token from service:", token);
   try {
     const decoded = verifyToken(token, process.env.JWT_SECRET!);
 

@@ -6,9 +6,8 @@ import { createAuthMiddleware } from "middleware";
 
 const connectionRouter: Router = express.Router();
 
-connectionRouter.get("/", validate(connectionValidator.accessLoginSchema), connectionController.accessLogin);
-connectionRouter.post("/", validate(connectionValidator.createLoginSchema), createAuthMiddleware(), connectionController.createLogin);
-
-connectionRouter.get("/:token", validate(connectionValidator.resetToken), connectionController.resetToken);
+connectionRouter.post("/create", validate(connectionValidator.createLoginSchema), createAuthMiddleware(), connectionController.createLogin);
+connectionRouter.post("/login", validate(connectionValidator.accessLoginSchema), connectionController.accessLogin);
+connectionRouter.post("/token", validate(connectionValidator.resetToken), connectionController.resetToken);
 
 export default connectionRouter;
